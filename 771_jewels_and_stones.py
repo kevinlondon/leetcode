@@ -1,0 +1,17 @@
+class Solution:
+    def numJewelsInStones(self, J, S):
+        """
+        :type J: str
+        :type S: str
+        :rtype: int
+        """
+        count = 0
+        if not J or not S:
+            return count
+        
+        j = set(J)
+        for c in S:
+            if c in j:
+                count += 1
+                
+        return count
