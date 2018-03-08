@@ -18,8 +18,6 @@ class Solution:
             return
         
         self.convertBST(root.right)
-        val = root.val
         root.val = self.seen = root.val + self.seen
         self.convertBST(root.left)
-                
         return root
