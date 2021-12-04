@@ -4,53 +4,41 @@ from collections import defaultdict
 
 class Solution:
     def threeSum(self, nums: List[int]) -> List[List[int]]:
-        matches = set()
+        matches = []
+        nums.sort()
 
-        nums = self.trimNums(nums)
-        sums = self.twoSum(nums)
-
-        for idx, value in enumerate(nums):
-            inverse = -value
-            if inverse not in sums:
+        for idx, value in enumerate(nums[:-2]):
+            if idx > 0 and value == nums[idx-1]:
                 continue
 
-            pairs = sums[inverse]
-            for pair in pairs:
-                if idx in pair:
-                    continue
+            if value > 0: break
 
-                match = tuple(sorted([nums[idx], nums[pair[0]], nums[pair[1]]]))
-                matches.add(match)
+            lo, hi = idx + 1, len(nums) - 1
 
+            while lo < hi:
+                total = value + nums[lo] + nums[hi]
+                if total == 0:
+                    matches.append([value, nums[lo], nums[hi]])
+                    while lo < hi and nums[lo] == nums[lo+1]:
+                        lo += 1
+                    while lo < hi and nums[hi] == nums[hi-1]:
+                        hi -= 1
 
-        return [list(match) for match in matches]
+                    lo += 1
+                    hi -= 1
+                elif total < 0:
+                    lo += 1
+                else:
+                    hi -= 1
 
-    def trimNums(self, nums: List[int]) -> List[int]:
-        trimmed_nums = []
-        seen = defaultdict(int)
-        for num in nums:
-            if seen.get(num, 0) > 3:
-                continue
-            trimmed_nums.append(num)
-            seen[num] += 1
-
-        return trimmed_nums
-
-    def twoSum(self, nums: List[int]) -> Dict[int, Tuple[List[int], Set[int]]]:
-        sums = defaultdict(list)
-
-        for index, value in enumerate(nums[:-1]):
-            for index2, value2 in enumerate(nums[index+1:], start=index+1):
-                sums[value + value2].append([index, index2])
-
-        return sums
+        return matches
 
 
 sol = Solution()
 
 def test_base_case():
     nums = [-1,0,1,2,-1,-4]
-    assert sol.threeSum(nums) == [[-1, 0, 1], [-1, -1, 2]]
+    assert sol.threeSum(nums) == [[-1, -1, 2], [-1, 0, 1]]
 
 def test_empty_case():
     assert sol.threeSum([]) == []
