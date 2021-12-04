@@ -11,6 +11,7 @@ class Solution:
             if idx > 0 and value == nums[idx-1]:
                 continue
 
+            # If the base value is over 0, we can't make a match.
             if value > 0: break
 
             lo, hi = idx + 1, len(nums) - 1
@@ -19,6 +20,8 @@ class Solution:
                 total = value + nums[lo] + nums[hi]
                 if total == 0:
                     matches.append([value, nums[lo], nums[hi]])
+
+                    # Skip duplicates - we don't need to look at them again
                     while lo < hi and nums[lo] == nums[lo+1]:
                         lo += 1
                     while lo < hi and nums[hi] == nums[hi-1]:
