@@ -4,11 +4,11 @@ from typing import List
 
 class Solution:
     def missingNumber(self, nums: List[int]) -> int:
-        to_find = set(range(len(nums) + 1))
-        for num in nums:
-            to_find.remove(num)
+        total = len(nums)
+        for index, num in enumerate(nums):
+            total += index - num
 
-        return next(iter(to_find))
+        return total
 
 
 @pytest.mark.parametrize("nums, expected", [
