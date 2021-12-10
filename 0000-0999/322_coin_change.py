@@ -1,29 +1,40 @@
 import pytest
 from typing import List
+from collections import OrderedDict
 
 
 class Solution:
     def coinChange(self, coins: List[int], amount: int) -> int:
         coins.sort()
+        counts = OrderedDict([])
         min_count = -1
-        coin_index = len(coins) - 1
 
-        if amount == 0:
-            return 0
+        if amount == 0: return 0
+        loops = 0
 
-        while coin_index >= 0 and amount > 0:
-            print(coin_index, amount, min_count)
-            coin = coins[coin_index]
-            if coin > amount:
-                coin_index -= 1
-            else:
-                amount -= coin
-                if min_count < 1:
-                    min_count = 1
-                else:
-                    min_count += 1
+        new_counts = {coin: 1 for coin in coins}
+        while new_counts:
+            counts.update(new_counts)
+            if amount in counts:
+                return counts[amount]
 
-        return min_count if coin_index >= 0 else -1
+            new_counts = {}
+            for coin, count in counts.items():
+                if coin == amount:
+                    min_count == amount
+
+                for coin2, count2 in counts.items():
+                    combo = coin + coin2
+                    tcount = count + count2
+
+                    if combo > amount:
+                        break
+                    elif combo not in counts and (combo not in new_counts or new_counts[combo] > tcount):
+                        new_counts[combo] = tcount
+
+        return min_count
+
+
 
 
 @pytest.mark.parametrize("coins, amount, expected", [
