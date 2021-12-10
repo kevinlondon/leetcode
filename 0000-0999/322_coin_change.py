@@ -5,35 +5,16 @@ from collections import OrderedDict
 
 class Solution:
     def coinChange(self, coins: List[int], amount: int) -> int:
-        coins.sort()
-        counts = OrderedDict([])
-        min_count = -1
+        dp = [0] + [float('inf') for i in range(amount)]
 
-        if amount == 0: return 0
-        loops = 0
+        for i in range(1, amount+1):
+            for coin in coins:
+                if i - coin >= 0:
+                    dp[i] = min(dp[i], dp[i-coin] + 1)
 
-        new_counts = {coin: 1 for coin in coins}
-        while new_counts:
-            counts.update(new_counts)
-            if amount in counts:
-                return counts[amount]
-
-            new_counts = {}
-            for coin, count in counts.items():
-                if coin == amount:
-                    min_count == amount
-
-                for coin2, count2 in counts.items():
-                    combo = coin + coin2
-                    tcount = count + count2
-
-                    if combo > amount:
-                        break
-                    elif combo not in counts and (combo not in new_counts or new_counts[combo] > tcount):
-                        new_counts[combo] = tcount
-
-        return min_count
-
+        if dp[-1] == float('inf'):
+            return -1
+        return dp[-1]
 
 
 
