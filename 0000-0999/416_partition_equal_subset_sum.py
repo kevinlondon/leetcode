@@ -3,20 +3,22 @@ from typing import List
 
 class Solution:
     def canPartition(self, nums: List[int]) -> bool:
-        full_target = sum(nums)
-        if full_target % 2:
-            # If the total is not even, it can't be done.
-            return False
-        target = full_target // 2
+        target, n, memo = sum(nums), len(nums), {0: True}
+        if target & 1: return False
+        nums.sort(reverse=True)
 
-        # Pre-initialize to being reachable as false
-        dp = [True] + [False] * target
-        for x in nums:
-            dp = [dp[s] or (s >= x and dp[s-x]) for s in range(target+1)]
-            print(x, dp)
-            if dp[target]: return True
-        return False
+        def dfs(i, x):
+            if x not in memo:
+                memo[x] = False
+                if x > 0:
+                    for j in range(i, n):
+                        if dfs(j+1, x-nums[j]):
+                            memo[x] = True
+                            break
+            return memo[x]
+        return dfs(0, target >> 1)
+
 
 
 if __name__ == '__main__':
-    Solution().canPartition([1, 5, 11, 5])
+    print(Solution().canPartition([6, 3, 3, 2, 2, 2]))
