@@ -1,36 +1,35 @@
 import pytest
+from math import gcd
 
 MODULO = (10 ** 9 + 7)
 
 
 class Solution:
 
+    def lcm(self, a: int, b: int) -> int:
+        return (a * b) // gcd(a, b)
+
     def nthMagicalNumber(self, n: int, a: int, b: int) -> int:
-        # One idea is to have a pair of pointers and check if the value times itself is less than the value times the next in the list.
-        # So we have to check the left and right sides of the pair right?
+        lcm_ab = self.lcm(a, b)
+        seq = set()
 
-        if a > b:
-            a, b = b, a  # just easier to reason about these in order.
+        for x in range(1, lcm_ab // a + 1):
+            # 1, (40 // 10) + 1 -> 5
+            # 10, 20, 30, 40
+            seq.add(x*a)
 
-        if b % a == 0:
-            return (n * a) % MODULO
+        for x in range(1, lcm_ab // b + 1):
+            # 1, (40 // 8) +1 -> 6
+            # 8, 16, 24, 32, 40
+            seq.add(x*b)
 
-        answers = []
-        next_a, next_b = a, b
-
-        for _ in range(n):
-            if next_a < next_b:
-                answers.append(next_a)
-                next_a += a
-            elif next_a > next_b:
-                answers.append(next_b)
-                next_b += b
-            else:
-                answers.append(next_a)
-                next_a += a
-                next_b += b
-
-        return answers[n-1] % MODULO
+        ordered = sorted(seq)
+        # 8, 10, 16, 20, 24, 30, 32, 40
+        full_loops = (n-1) // len(ordered)
+        ans = full_loops * lcm_ab + ordered[n % len(ordered)-1]
+        # ((10-1) // (8) -> 1 * 40 -> 40 + ordered[10 % 8 - 1] -> ordered[1] -> 10
+        # lcm = 40
+        return ans % MODULO
 
 
 @pytest.mark.parametrize("n,a,b,exp", [
