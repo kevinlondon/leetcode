@@ -24,35 +24,19 @@ class Solution:
             edge_map[left].add(right)
             edge_map[right].add(left)
 
-        nodes_needed = set(range(n))
+        leaves = [node for node, pairs in edge_map.items() if len(pairs) == 1]
 
-        roots = []
+        while n > 2:
+            n -= len(leaves)
+            new_leaves = []
+            for leaf in leaves:
+                pair = edge_map[leaf].pop()
+                edge_map[pair].remove(leaf)
+                if len(edge_map[pair]) == 1:
+                    new_leaves.append(pair)
 
-        heights = defaultdict(list)
-
-        for node in edge_map:
-            height = self.find_height(n, node, edge_map)
-            heights[height].append(node)
-
-        return heights[min(heights)]
-
-    def find_height(self, n, node, edge_map):
-        nodes_needed = set(range(n))
-
-        height = 0
-        to_visit = {node}
-
-        while nodes_needed:
-            height += 1
-            nodes_needed.difference_update(to_visit)
-
-            next_visit = set()
-            for v in to_visit:
-                next_visit.update(edge_map[v])
-
-            to_visit = next_visit & nodes_needed
-
-        return height
+            leaves = new_leaves
+        return leaves
 
 
 @pytest.mark.parametrize("n, edges, expected", [
