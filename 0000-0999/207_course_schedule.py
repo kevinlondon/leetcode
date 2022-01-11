@@ -1,36 +1,31 @@
-from collections import defaultdict, deque
+from collections import defaultdict
 
 class Solution:
     def canFinish(self, numCourses: int, prerequisites: List[List[int]]) -> bool:
         prereqs = defaultdict(list)
-        can_take = [False for course in range(numCourses)]
+        can_take = [0 for course in range(numCourses)]
 
         for course, requirement in prerequisites:
             prereqs[course].append(requirement)
 
-        for course in range(numCourses):
-            self.canTake(course, can_take, prereqs, seen=set())
-
-        return all(can_take)
-
-    def canTake(self, course: int, can_take: list, prereqs: defaultdict(list), seen: set) -> bool:
-        required = deque([course])
-
-        while required:
-            prereq = required.popleft()
-
-            if can_take[prereq]:
-                continue
-            elif prereq in seen:
+        def dfs(course):
+            if can_take[course] == -1:
+                # We've seen it but haven't resolved so there's a cycle.
                 return False
+            elif can_take[course] == 1:
+                # We've seen it, we know it can be taken.
+                return True
 
-            seen.add(prereq)
-
-            requirements = prereqs[prereq]
-            for requirement in requirements:
-                if not self.canTake(requirement, can_take, prereqs, seen):
+            can_take[course] = -1
+            for prereq in prereqs[course]:
+                if not dfs(prereq):
                     return False
 
-        if not required:
-            can_take[course] = True
+            can_take[course] = 1
             return True
+
+        for course in range(numCourses):
+            if not dfs(course):
+                return False
+
+        return True
