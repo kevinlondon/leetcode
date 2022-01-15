@@ -24,8 +24,4 @@ class Solution:
             can_take[course] = 1
             return True
 
-        for course in range(numCourses):
-            if not dfs(course):
-                return False
-
-        return True
+        return all([dfs(course) for course in range(numCourses)])
