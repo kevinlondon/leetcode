@@ -5,17 +5,19 @@ class Solution:
 
         m, n = len(heights), len(heights[0])
 
-        p_visited = [[False for _ in range(n)] for _ in range(m)]
-        a_visited = [[False for _ in range(n)] for _ in range(m)]
+        p_visited = set()
+        a_visited = set()
         directions = [(1, 0), (-1, 0), (0, 1), (0, -1)]
         results = []
 
         def dfs(i, j, visited):
-            visited[i][j] = True
+            if (i, j) in visited:
+                return
 
+            visited.add((i, j))
             for (y_delta, x_delta) in directions:
                 y, x = i + y_delta, j + x_delta
-                if 0 <= y < m and 0 <= x < n and heights[y][x] >= heights[i][j] and not visited[y][x]:
+                if 0 <= y < m and 0 <= x < n and heights[y][x] >= heights[i][j]:
                     dfs(y, x, visited)
 
         for row in range(m):
@@ -26,9 +28,4 @@ class Solution:
             dfs(0, col, p_visited)
             dfs(m-1, col, a_visited)
 
-        for i in range(m):
-            for j in range(n):
-                if a_visited[i][j] and p_visited[i][j]:
-                    results.append([i, j])
-
-        return results
+        return list(a_visited & p_visited)
