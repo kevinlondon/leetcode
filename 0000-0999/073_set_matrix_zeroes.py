@@ -1,27 +1,25 @@
 class Solution:
-    def setZeroes(self, matrix):
+    def setZeroes(self, matrix: List[List[int]]) -> None:
         """
-        :type matrix: List[List[int]]
-        :rtype: void Do not return anything, modify matrix in-place instead.
+        Do not return anything, modify matrix in-place instead.
         """
-        rows = set()
-        columns = set()
-        
-        if not matrix:
-            return
-        
-        for y, row in enumerate(matrix):
-            if not row:
-                return
-            
-            for x, elem in enumerate(row):
-                if elem == 0:
-                    rows.add(y)
-                    columns.add(x)
-                    
+        columns, rows = set(), set()
+        n_col, n_row = len(matrix), len(matrix[0])
+
+        for row in range(n_col):
+            for column in range(n_row):
+                if matrix[row][column] == 0:
+                    columns.add(column)
+                    rows.add(row)
+
+
         for row in rows:
-            matrix[row] = [0 for x in range(len(matrix[row]))]
-            
-        for column in columns:
-            for y in range(len(matrix)):
-                matrix[y][column] = 0
+            for col in range(n_row):
+                matrix[row][col] = 0
+
+        for row in range(n_col):
+            for col in columns:
+                matrix[row][col] = 0
+
+
+        return matrix
