@@ -1,24 +1,19 @@
 class Solution:
-        
-    def longestPalindrome(self, s):
-        """
-        :type s: str
-        :rtype: str
-        """
+    def longestPalindrome(self, s: str) -> str:
         palindrome = ""
-        
-        for index in range(len(s)):
-            a = self.expandAroundCenter(s, index, index)
-            b = self.expandAroundCenter(s, index, index+1)
-            
-            if max(len(a), len(b)) > (len(palindrome)):
-                palindrome = a if len(a) > len(b) else b
-            
-        return palindrome     
-        
-    def expandAroundCenter(self, s, left, right):
-        while (left >= 0 and right < len(s) and s[left] == s[right]):
-            left -= 1
-            right += 1
-        
-        return s[left+1:right]
+
+        def expand(start, end):
+            while start >= 0 and end < len(s) and s[start] == s[end]:
+                start -= 1
+                end += 1
+
+            return s[start+1:end]
+
+        for i in range(len(s)):
+            even = expand(i, i)
+            odd = expand(i, i+1)
+
+            if max(len(even), len(odd)) > len(palindrome):
+                palindrome = even if len(even) > len(odd) else odd
+
+        return palindrome
