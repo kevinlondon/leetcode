@@ -1,26 +1,22 @@
-OPEN = {
-    '(': ')',
-    '{': '}',
-    '[': ']',
-}
-
 class Solution:
-    def isValid(self, s):
-        """
-        :type s: str
-        :rtype: bool
-        """
-        levels = []
-        for character in s:
-            if character in OPEN:
-                levels.append(character)
+    opposites = {
+        '}': '{',
+        ']': '[',
+        ')': '(',
+    }
+    def isValid(self, s: str) -> bool:
+        openers = []
+
+        for c in s:
+            if c not in self.opposites:
+                openers.append(c)
+            elif not openers or openers[-1] != self.opposites[c]:
+                return False
             else:
-                if not levels:
-                    return False
-                
-                opening_char = levels.pop()
-                closing_char = OPEN[opening_char]
-                if closing_char != character:
-                    return False
-        
-        return not levels        
+                openers.pop(-1)
+
+        if openers:
+            return False
+
+        return True
+
