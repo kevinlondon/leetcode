@@ -1,20 +1,19 @@
 class Solution:
-    
-    def countSubstrings(self, s):
-        """
-        :type s: str
-        :rtype: int
-        """
-        n = len(s)
-        pals = 0
-        
-        for center in range(2*n - 1):
-            left = center // 2
-            right = left + center % 2
-            
-            while left >= 0 and right < n and s[left] == s[right]:
-                pals += 1
-                left -= 1
-                right += 1
-                
-        return pals
+    def countSubstrings(self, s: str) -> int:
+        substrs = 0
+
+        for i in range(len(s)):
+            substrs += self.expand_around_center(s, i, i)
+            substrs += self.expand_around_center(s, i, i+1)
+
+        return substrs
+
+    def expand_around_center(self, s, i, j):
+        found = 0
+
+        while 0 <= i and j < len(s) and s[i] == s[j]:
+            found += 1
+            i -= 1
+            j += 1
+
+        return found
