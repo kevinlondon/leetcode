@@ -1,64 +1,37 @@
 class Trie:
 
     def __init__(self):
-        """
-        Initialize your data structure here.
-        """
-        self.data = self.init_tier()
-        
-    def init_tier(self):
-        return [None for x in range(27)]
-    
-    def chr_to_int(self, char):
-        return ord(char) - ord('a')
+        self.trie = defaultdict(dict)
 
-    def insert(self, word):
-        """
-        Inserts a word into the trie.
-        :type word: str
-        :rtype: void
-        """
-        tier = self.data
-        for char in word:
-            idx = self.chr_to_int(char)
-            if tier[idx]:
-                tier = tier[idx]
-            else:
-                tier[idx] = self.init_tier()
-                tier = tier[idx]
-        
-        tier[-1] = '*'
+    def insert(self, word: str) -> None:
+        if not word:
+            return
+        trie = self.trie
+        for letter in word:
+            if letter not in trie:
+                trie[letter] = defaultdict(dict)
 
-    def search(self, word):
-        """
-        Returns if the word is in the trie.
-        :type word: str
-        :rtype: bool
-        """
-        tier = self.data
-        for char in word:
-            idx = self.chr_to_int(char)
-            if not tier[idx]:
-                return False
-            
-            tier = tier[idx]
-        return tier[-1] == '*'
+            trie = trie[letter]
 
-    def startsWith(self, prefix):
-        """
-        Returns if there is any word in the trie that starts with the given prefix.
-        :type prefix: str
-        :rtype: bool
-        """
-        tier = self.data
-        for char in prefix:
-            idx = self.chr_to_int(char)
-            if not tier[idx]:
-                return False
-            
-            tier = tier[idx]
+        trie['#'] = True
+
+    def search(self, word: str) -> bool:
+        trie = self.trie
+        for letter in word:
+            if letter not in trie:
+                return
+            trie = trie[letter]
+
+        return '#' in trie
+
+    def startsWith(self, prefix: str) -> bool:
+        trie = self.trie
+        for letter in prefix:
+            if letter not in trie:
+                return
+            trie = trie[letter]
+
         return True
-        
 
 
 # Your Trie object will be instantiated and called as such:
