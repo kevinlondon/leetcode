@@ -2,20 +2,18 @@ class Solution:
     def jump(self, nums: List[int]) -> int:
         """
         Idea:
-        * Include a minimum number of jumps at each square, then evaluate the minimum
-        seen so far
-        Do we still start from the end?
-        I think so!
+        Ladder and stairs.
         """
-
-        min_jumps = [float('inf')] * len(nums)
-        min_jumps[0] = 0
+        jumps, ladder_end, next_furthest = 0, 0, 0
 
         for i, num in enumerate(nums):
-            for j in range(1, num+1):
-                if i+j >= len(nums):
-                    continue
+            if i == len(nums)-1:
+                break
 
-                min_jumps[i+j] = min(min_jumps[i] + 1, min_jumps[i+j])
+            next_furthest = max(next_furthest, num + i)
 
-        return min_jumps[-1]
+            if i == ladder_end:
+                ladder_end = next_furthest
+                jumps += 1
+
+        return jumps
