@@ -1,18 +1,15 @@
 class Solution:
-    visited = set()
-
     def canJump(self, nums: List[int]) -> bool:
-        self.visited = set()
-        return self.canJumpFrom(nums, 0)
+        """
+        Given int nums
+        Start at the first index (0th index?)
+        True if can reach last index.
+        """
 
-    def canJumpFrom(self, nums: List[int], start: int) -> bool:
-        self.visited.add(start)
+        jump_needed = len(nums)-1
 
-        if start >= len(nums) - 1:
-            return True
+        for i in range(len(nums)-1, -1, -1):
+            if nums[i] + i >= jump_needed:
+                jump_needed = i
 
-        for x in range(1, nums[start] + 1):
-            if start + x not in self.visited and self.canJumpFrom(nums, start+x):
-                return True
-
-        return False
+        return jump_needed == 0
