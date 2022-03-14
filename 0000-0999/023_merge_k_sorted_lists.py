@@ -1,31 +1,26 @@
 # Definition for singly-linked list.
 # class ListNode:
-#     def __init__(self, x):
-#         self.val = x
-#         self.next = None
+#     def __init__(self, val=0, next=None):
+#         self.val = val
+#         self.next = next
+from queue import PriorityQueue
+
 
 class Solution:
-    def mergeKLists(self, lists):
-        """
-        :type lists: List[ListNode]
-        :rtype: ListNode
-        """
-        sorted_list = []
-        
-        for head in lists:
-            curr = head
-            while curr:
-                sorted_list.append(curr)
-                curr = curr.next
-            
-        sorted_list = sorted(sorted_list, key=lambda x: x.val)
-        for i, node in enumerate(sorted_list):
-            if i + 1 < len(sorted_list):
-                node.next = sorted_list[i+1]
-            else:
-                node.next = None
-            
-        if sorted_list:
-            return sorted_list[0]
-        else:
-            return
+    def mergeKLists(self, lists: List[Optional[ListNode]]) -> Optional[ListNode]:
+        dummy = current = ListNode()
+
+        queue = PriorityQueue()
+
+        for idx, head in enumerate(lists):
+            if head:
+                queue.put((head.val, idx, head))
+
+        while not queue.empty():
+            _, idx, node = queue.get()
+            current.next = node
+            if node.next:
+                queue.put((node.next.val, idx, node.next))
+            current = node
+
+        return dummy.next
